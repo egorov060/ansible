@@ -1,0 +1,50 @@
+---
+- name: prod
+  hosts: prod
+  become: yes
+
+  tasks:
+  - name: Ensure tomkat packeges is present
+    apt:
+      name: tomcat9
+      state: present
+
+- name: Install maven
+  hosts: build
+  become: yes
+
+  tasks:
+  - name: Ensure java packeges is present
+    apt:
+      name: default-jdk
+      state: present 
+
+  tasks:
+  - name: Ensure maven packeges is present
+    apt:
+      name: maven
+      state: present
+
+  tasks:
+  - name: Git checkout
+    ansible.builtin.git:
+      repo: 'https://github.com/boxfuse/boxfuse-sample-java-war-hello.git'
+      dest: /opt
+      version: latest
+  
+  tasks:
+  - name: Maven package
+    command: >
+      cd /opt/boxfuse-sample-java-war-hello && maven package
+
+  tasks:
+  - name: copy artefaktory
+    synchronize:
+      src: /opt/boxfuse-sample-java-war-hello/hello-1.0.war
+      dest: /var/lib/tomcat9/webapps/
+    delegate_to: prod
+
+    
+
+
+

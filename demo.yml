@@ -1,13 +1,4 @@
 ---
-- name: prod
-  hosts: prod
-  become: yes
-
-  tasks:
-  - name: Ensure tomkat packeges is present
-    apt:
-      name: tomcat9
-      state: present
 
 - name: Install maven
   hosts: build
@@ -26,8 +17,6 @@
       state: present
 
   - name: Git clole
-#    command: >
-#      cd /opt/ && git clone https://github.com/boxfuse/boxfuse-sample-java-war-hello.git
     git:
      repo: https://github.com/boxfuse/boxfuse-sample-java-war-hello.git
      dest: /opt/
@@ -44,6 +33,20 @@
       src: /opt/target/hello-1.0.war
       dest: /opt
 
+- name: prod
+  hosts: prod
+  become: yes
+
+  tasks:
+  - name: Ensure tomkat packeges is present
+    apt:
+      name: tomcat9
+      state: present
+  
+  - name: copy war to prod
+    copy:
+      src: /opt/192.168.55.22/opt/target/hello-1.0.war
+      dest: /var/lib/tomcat9/webapps/
 
     
 

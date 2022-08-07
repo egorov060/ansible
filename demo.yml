@@ -3,52 +3,38 @@
 - name: Install maven
   hosts: build
   become: yes
-
   tasks:
   - name: Ensure java packeges is present
     apt:
       name: default-jdk
       state: present
-
-
   - name: Ensure maven packeges is present
     apt:
       name: maven
       state: present
-
   - name: Git clole
     git:
      repo: https://github.com/boxfuse/boxfuse-sample-java-war-hello.git
      dest: /opt/
      clone: yes
      update: yes
-
   - name: mvn package
     command: mvn package
     args:
       chdir: /opt/
-
   - name: copy war to host
     fetch:
       src: /opt/target/hello-1.0.war
       dest: /opt
-
 - name: prod
   hosts: prod
   become: yes
-
   tasks:
   - name: Ensure tomkat packeges is present
     apt:
       name: tomcat9
       state: present
-  
   - name: copy war to prod
     copy:
       src: /opt/192.168.55.22/opt/target/hello-1.0.war
       dest: /var/lib/tomcat9/webapps/
-
-    
-
-
-

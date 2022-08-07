@@ -12,7 +12,7 @@
     apt:
       name: maven
       state: present
-  - name: Git clole
+  - name: Git clone
     git:
      repo: https://github.com/boxfuse/boxfuse-sample-java-war-hello.git
      dest: /opt/

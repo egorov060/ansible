@@ -8,11 +8,6 @@
     apt:
       name: tomcat9
       state: present
-#  - name: copy war to prod
-#    copy:
-#      src: /opt/192.168.55.22/opt/target/hello-1.0.war
-#      dest: /var/lib/tomcat9/webapps/
-
 
 - name: Install maven
   hosts: build
@@ -22,17 +17,6 @@
     apt:
       name: default-jdk
       state: present
-
-  - name: Ensure ansible packeges is present
-    apt:
-      name: ansible
-      state: present
-
-  - name: copy file hosts to build
-    copy:
-      src: /etc/ansible/hosts
-      dest: /etc/ansible/hosts
-
   - name: Ensure maven packeges is present
     apt:
       name: maven
@@ -47,13 +31,11 @@
     command: mvn package
     args:
       chdir: /opt/
-#  - name: copy war to host
-#    fetch:
-#      src: /opt/target/hello-1.0.war
-#      dest: /opt
+
   - name: copy artefaktory
     synchronize:
       mode: pull
-      src: /opt/target/
-      dest: rsync://192.168.55.23/opt/
-#    delegate_to: "{{prod}}"
+      src: '/opt/target/hello-1.0.war'
+      dest: '/var/lib/tomcat9/webapps/'
+    delegate_to: prod
+
